@@ -1,23 +1,18 @@
+import Box from '@material-ui/core/Box';
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Typography from '@material-ui/core/Typography';
 import React from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => (
+  <>
+    <CssBaseline />
+    <Container maxWidth="sm">
+      <Box textAlign="center">
+        <Typography>App</Typography>
+      </Box>
+    </Container>
+  </>
+);
 
 export default App;
