@@ -4,7 +4,7 @@ import React from 'react';
 import Episodes from './episodes';
 
 const Pages = () => (
-  <Container maxWidth="sm">
+  <Container maxWidth="md">
     <Router>
       <Episodes path="/" />
     </Router>
