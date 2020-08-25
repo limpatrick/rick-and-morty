@@ -4,15 +4,9 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import styled from 'styled-components';
-import { EpisodesQuery } from '../generated/graphql';
+import { SearchEpisodesQuery } from '../../../generated/graphql';
 
-type Props = Pick<EpisodesQuery['episodes']['results'][0], 'name' | 'episode' | 'air_date'>;
-
-const StyledCardContent = styled(CardContent)`
-  @media (min-width: 960px) {
-    min-height: 125px;
-  }
-`;
+type Props = Pick<SearchEpisodesQuery['episodes']['results'][0], 'name' | 'episode' | 'air_date'>;
 
 const EpisodeCard = ({ name, episode, air_date }: Props) => {
   return (
@@ -35,3 +29,9 @@ const EpisodeCard = ({ name, episode, air_date }: Props) => {
 };
 
 export default EpisodeCard;
+
+const StyledCardContent = styled(CardContent)`
+  @media (min-width: 960px) {
+    min-height: 125px;
+  }
+`;
