@@ -10,27 +10,6 @@ import styled from 'styled-components';
 import EpisodeCard from '../components/episode-card';
 import { useEpisodesQuery } from '../generated/graphql';
 
-export const query = gql`
-  query Episodes($page: Int!) {
-    episodes(page: $page) {
-      info {
-        pages
-      }
-      results {
-        id
-        name
-        air_date
-        episode
-      }
-    }
-  }
-`;
-
-const StyledPaginationGrid = styled(Grid)`
-  padding-top: 32px;
-  padding-bottom: 32px;
-`;
-
 const Episodes = ({ location }: RouteComponentProps) => {
   const params = parse(location?.search ?? '');
   const page = is(String, params.page) ? parseInt(params.page as string) : 1;
@@ -69,3 +48,24 @@ const Episodes = ({ location }: RouteComponentProps) => {
 };
 
 export default Episodes;
+
+export const query = gql`
+  query Episodes($page: Int!) {
+    episodes(page: $page) {
+      info {
+        pages
+      }
+      results {
+        id
+        name
+        air_date
+        episode
+      }
+    }
+  }
+`;
+
+const StyledPaginationGrid = styled(Grid)`
+  padding-top: 32px;
+  padding-bottom: 32px;
+`;
