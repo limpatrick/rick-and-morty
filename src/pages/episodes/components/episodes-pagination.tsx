@@ -8,7 +8,9 @@ import { toPath } from '../../../helpers/location';
 import { useEpisodesState } from '../provider';
 
 const EpisodesPagination = () => {
-  const { count, page, name, episode } = useEpisodesState();
+  const { count, page, name, episode, loading } = useEpisodesState();
+
+  if (count === 0 || loading) return null;
 
   return (
     <StyledGrid container item justify="center" alignItems="center" spacing={2}>

@@ -5,10 +5,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 const NotFound = (props: RouteComponentProps) => (
-  <GridContainer container justify="center" alignItems="center">
-    <Grid item>
-      <Typography variant="h1">Not found :(</Typography>
-    </Grid>
+  <GridContainer container item justify="center" alignItems="center">
+    <Typography variant="h2">Not found :(</Typography>
   </GridContainer>
 );
 
