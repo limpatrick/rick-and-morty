@@ -3,6 +3,7 @@ import React from 'react';
 import AppBar from '../components/app-bar';
 import PageContainer from '../components/page-container';
 import Episodes from './episodes';
+import NotFound from './not-found';
 
 const Pages = () => (
   <>
@@ -10,6 +11,7 @@ const Pages = () => (
     <PageContainer>
       <Router>
         <Episodes path="/" />
+        <NotFound default />
       </Router>
     </PageContainer>
   </>
