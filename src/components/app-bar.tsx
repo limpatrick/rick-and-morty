@@ -1,10 +1,11 @@
 import MuiAppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import Zoom from '@material-ui/core/Zoom';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import { Link } from '@reach/router';
 import React from 'react';
 import styled from 'styled-components';
 import { ID_TOP } from '../constants';
@@ -16,9 +17,9 @@ const AppBar = () => {
     <>
       <MuiAppBar position="fixed" elevation={trigger ? 6 : 4}>
         <Toolbar>
-          <Title variant="h6" noWrap>
+          <Button component={Link} to="/" color="inherit" size="large">
             Rick and Morty
-          </Title>
+          </Button>
         </Toolbar>
       </MuiAppBar>
       <Zoom in={trigger}>
@@ -40,10 +41,6 @@ const AppBar = () => {
 };
 
 export default AppBar;
-
-const Title = styled(Typography)`
-  flex-grow: 1;
-`;
 
 const ScrollTop = styled.div`
   position: fixed;
