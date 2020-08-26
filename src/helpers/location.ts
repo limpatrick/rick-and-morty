@@ -1,5 +1,6 @@
 import { WindowLocation } from '@reach/router';
 import { parse, stringify } from 'query-string';
+import { isEmpty, isNil, mapObjIndexed } from 'ramda';
 import * as yup from 'yup';
 
 export const getParams = (location: WindowLocation) => parse(location.search);
@@ -33,11 +34,15 @@ export const getEpisode = (location: WindowLocation): string | undefined => {
 export const toSearch = (object: Record<string, string | number | undefined>): string =>
   stringify(object, { sort: false });
 
+export const shortParams = (object: Record<string, string | number | undefined>) =>
+  mapObjIndexed((e) => (isEmpty(e) || isNil(e) ? undefined : e), object);
+
 export const toPath = (
   object: Record<string, string | number | undefined>,
-  path: string
+  path: string,
+  short = true
 ): string => {
-  const search = toSearch(object);
+  const search = toSearch(short ? shortParams(object) : object);
 
   return `${path}${search ? `?${search}` : ''}`;
 };

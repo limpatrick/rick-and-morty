@@ -1,16 +1,14 @@
 import { gql } from '@apollo/client';
 import { useLocation, useNavigate } from '@reach/router';
-import { equals } from 'ramda';
 import React, { createContext, useContext, useEffect, useReducer } from 'react';
 import { useSearchEpisodesLazyQuery } from '../../generated/graphql';
-import { getCurrentPath, getEpisode, getName, getPage, toPath } from '../../helpers/location';
-import { changePage, searchEpisode, searchEpisodeStart, searchEpisodeSuccess } from './actions';
+import { getEpisode, getName, getPage, getParam, toPath } from '../../helpers/location';
+import { searchEpisodeStart, searchSuccess, setParameters } from './actions';
 import reducer from './reducer';
 import { State } from './types';
 
 type Actions = {
   search: (name: string, episode: string) => void;
-  changePage: (page: number) => void;
 };
 type Props = { children: React.ReactNode };
 
@@ -34,32 +32,62 @@ const EpisodesProvider = ({ children }: Props) => {
 
   const { page, name, episode } = state;
   const actions: Actions = {
-    search: (newName, newEpisode) => dispatch(searchEpisode(newName, newEpisode)),
-    changePage: (newPage) => dispatch(changePage(newPage)),
+    search: (newName, newEpisode) => {
+      dispatch(setParameters(1, newName, newEpisode));
+      const newPath = toPath(
+        {
+          page: undefined,
+          name: newName,
+          episode: newEpisode,
+        },
+        '/'
+      );
+      console.log({ navigate: newPath });
+      navigate(newPath);
+    },
   };
 
+  // update filters when location changed
   useEffect(() => {
+    const currentPage = getParam('page', location);
+    const currentName = getParam('name', location);
+    const currentEpisode = getParam('episode', location);
+    const pageParam = getPage(location);
+    const nameParam = getName(location);
+    const episodeParam = getEpisode(location);
+
+    dispatch(setParameters(pageParam, nameParam, episodeParam));
+
+    if (
+      currentPage !== pageParam?.toString() ||
+      currentName !== nameParam ||
+      currentEpisode !== episodeParam
+    ) {
+      const newPath = toPath(
+        {
+          page: pageParam,
+          name: nameParam,
+          episode: episodeParam,
+        },
+        '/'
+      );
+      console.log({ navigate: newPath });
+      navigate(newPath);
+    }
+  }, [location, navigate]);
+
+  // search
+  useEffect(() => {
+    console.log('search', { page, name, episode });
     dispatch(searchEpisodeStart());
     search({ variables: { page, name, episode } });
   }, [episode, name, page, search]);
 
+  // receive data
   useEffect(() => {
-    if (!loading && data) dispatch(searchEpisodeSuccess(data));
-  }, [data, loading]);
-
-  useEffect(() => {
-    const newPath = toPath(
-      {
-        page,
-        name: name !== '' ? name : undefined,
-        episode: episode !== '' ? episode : undefined,
-      },
-      '/'
-    );
-    const currentPath = getCurrentPath(location);
-
-    if (!equals(currentPath, newPath)) navigate(newPath);
-  }, [episode, location, name, navigate, page]);
+    console.log('data', { loading, data });
+    if (!loading && data) dispatch(searchSuccess(data));
+  }, [loading, data]);
 
   return (
     <EpisodesStateContext.Provider value={state}>

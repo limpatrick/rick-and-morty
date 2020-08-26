@@ -1,28 +1,21 @@
 import { SearchEpisodesQuery } from '../../generated/graphql';
 import {
-  CHANGE_PAGE,
-  ChangePageAction,
-  SEARCH,
   SEARCH_START,
   SEARCH_SUCCESS,
-  SearchAction,
   SearchStartAction,
   SearchSuccessAction,
+  SET_PARAMETERS,
+  SetParametersAction,
 } from './types';
 
-export const searchEpisode = (name: string, episode: string): SearchAction => ({
-  type: SEARCH,
-  payload: { name, episode },
-});
+export const setParameters = (
+  page: number | undefined,
+  name: string | undefined,
+  episode: string | undefined
+): SetParametersAction => ({ type: SET_PARAMETERS, payload: { page, name, episode } });
 
 export const searchEpisodeStart = (): SearchStartAction => ({ type: SEARCH_START });
-
-export const searchEpisodeSuccess = (data: SearchEpisodesQuery): SearchSuccessAction => ({
+export const searchSuccess = (data: SearchEpisodesQuery): SearchSuccessAction => ({
   type: SEARCH_SUCCESS,
   payload: data,
-});
-
-export const changePage = (page: number): ChangePageAction => ({
-  type: CHANGE_PAGE,
-  payload: page,
 });

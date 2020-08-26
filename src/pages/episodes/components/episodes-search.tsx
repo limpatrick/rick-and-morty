@@ -1,14 +1,30 @@
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import { Field, Form, Formik } from 'formik';
+import { Field, Form, Formik, useFormikContext } from 'formik';
 import { TextField } from 'formik-material-ui';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import * as Yup from 'yup';
-import { useEpisodes } from '../provider';
+import { useEpisodes, useEpisodesState } from '../provider';
+
+const EpisodesSearchHandler = () => {
+  const { loading, name, episode } = useEpisodesState();
+  const { isSubmitting, setSubmitting, setValues } = useFormikContext();
+
+  useEffect(() => {
+    console.log('params changed', { name, episode });
+    setValues({ name, episode });
+  }, [episode, name, setValues]);
+
+  useEffect(() => {
+    if (isSubmitting && !loading) setSubmitting(false);
+  }, [isSubmitting, loading, setSubmitting]);
+
+  return null;
+};
 
 const EpisodesSearch = () => {
-  const [{ loading, name, episode }, { search }] = useEpisodes();
+  const [{ name, episode }, { search }] = useEpisodes();
 
   return (
     <Formik
@@ -17,68 +33,60 @@ const EpisodesSearch = () => {
         name: Yup.string().trim(),
         episode: Yup.string().trim(),
       })}
-      onSubmit={(values, { setSubmitting }) => {
-        if (values.name !== name || values.episode !== episode) {
-          console.log('submit', values);
-          search(values.name, values.episode);
-        } else setSubmitting(false);
-      }}
+      onSubmit={(values) => search(values.name.trim(), values.episode.trim())}
     >
-      {({ isSubmitting, setSubmitting, resetForm }) => {
-        if (isSubmitting && !loading) setSubmitting(false);
-
-        return (
-          <StyledForm>
-            <Grid container justify="flex-start" alignItems="center" spacing={2}>
-              <Grid item xs={12} sm={4}>
-                <Field
-                  component={TextField}
-                  fullWidth
-                  id="name"
-                  label="Name"
-                  name="name"
-                  variant="outlined"
-                />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Field
-                  component={TextField}
-                  fullWidth
-                  id="episode"
-                  label="Episode"
-                  name="episode"
-                  variant="outlined"
-                />
-              </Grid>
-              <CenteredGrid item xs={12} sm={4}>
-                <Button
-                  aria-label="Search"
-                  color="primary"
-                  disabled={isSubmitting}
-                  type="submit"
-                  variant="contained"
-                  size="small"
-                >
-                  Search
-                </Button>
-                <Button
-                  aria-label="Reset"
-                  color="primary"
-                  disabled={isSubmitting}
-                  variant="contained"
-                  onClick={() => {
-                    search('', '');
-                    resetForm({ values: { name: '', episode: '' } });
-                  }}
-                  size="small"
-                >
-                  Reset
-                </Button>
-              </CenteredGrid>
+      {({ isSubmitting, resetForm }) => (
+        <StyledForm>
+          <EpisodesSearchHandler />
+          <Grid container justify="flex-start" alignItems="center" spacing={2}>
+            <Grid item xs={12} sm={4}>
+              <Field
+                component={TextField}
+                fullWidth
+                id="name"
+                label="Name"
+                name="name"
+                variant="outlined"
+              />
             </Grid>
-          </StyledForm>
-        );
-      }}
+            <Grid item xs={12} sm={4}>
+              <Field
+                component={TextField}
+                fullWidth
+                id="episode"
+                label="Episode"
+                name="episode"
+                variant="outlined"
+              />
+            </Grid>
+            <CenteredGrid item xs={12} sm={4}>
+              <Button
+                aria-label="Search"
+                color="primary"
+                disabled={isSubmitting}
+                type="submit"
+                variant="contained"
+                size="small"
+              >
+                Search
+              </Button>
+              <Button
+                aria-label="Reset"
+                color="primary"
+                disabled={isSubmitting}
+                variant="contained"
+                onClick={() => {
+                  search('', '');
+                  resetForm({ values: { name: '', episode: '' } });
+                }}
+                size="small"
+              >
+                Reset
+              </Button>
+            </CenteredGrid>
+          </Grid>
+        </StyledForm>
+      )}
     </Formik>
   );
 };
