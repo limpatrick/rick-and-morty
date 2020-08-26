@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from '@reach/router';
 import React, { createContext, useContext, useEffect, useReducer } from 'react';
 import { useSearchEpisodesLazyQuery } from '../../generated/graphql';
 import { getEpisode, getName, getPage, getParam, toPath } from '../../helpers/location';
-import { searchEpisodeStart, searchSuccess, setParameters } from './actions';
+import { searchError, searchStart, searchSuccess, setFilters } from './actions';
 import reducer from './reducer';
 import { State } from './types';
 
@@ -27,23 +27,25 @@ const getInitialState = (location: ReturnType<typeof useLocation>): State => ({
 const EpisodesProvider = ({ children }: Props) => {
   const location = useLocation();
   const [state, dispatch] = useReducer(reducer, getInitialState(location));
-  const [search, { loading, data }] = useSearchEpisodesLazyQuery();
+  const [search, { loading, data, error }] = useSearchEpisodesLazyQuery();
   const navigate = useNavigate();
 
   const { page, name, episode } = state;
   const actions: Actions = {
     search: (newName, newEpisode) => {
-      dispatch(setParameters(1, newName, newEpisode));
-      const newPath = toPath(
-        {
-          page: undefined,
-          name: newName,
-          episode: newEpisode,
-        },
-        '/'
-      );
-      console.log({ navigate: newPath });
-      navigate(newPath);
+      if (name !== newName || episode !== newEpisode || page > 1) {
+        dispatch(setFilters(1, newName, newEpisode));
+        navigate(
+          toPath(
+            {
+              page: undefined,
+              name: newName,
+              episode: newEpisode,
+            },
+            '/'
+          )
+        );
+      }
     },
   };
 
@@ -56,38 +58,44 @@ const EpisodesProvider = ({ children }: Props) => {
     const nameParam = getName(location);
     const episodeParam = getEpisode(location);
 
-    dispatch(setParameters(pageParam, nameParam, episodeParam));
+    dispatch(setFilters(pageParam, nameParam, episodeParam));
 
     if (
       currentPage !== pageParam?.toString() ||
       currentName !== nameParam ||
       currentEpisode !== episodeParam
     ) {
-      const newPath = toPath(
-        {
-          page: pageParam,
-          name: nameParam,
-          episode: episodeParam,
-        },
-        '/'
+      navigate(
+        toPath(
+          {
+            page: pageParam,
+            name: nameParam,
+            episode: episodeParam,
+          },
+          '/'
+        )
       );
-      console.log({ navigate: newPath });
-      navigate(newPath);
     }
   }, [location, navigate]);
 
   // search
   useEffect(() => {
-    console.log('search', { page, name, episode });
-    dispatch(searchEpisodeStart());
+    dispatch(searchStart());
     search({ variables: { page, name, episode } });
   }, [episode, name, page, search]);
 
   // receive data
   useEffect(() => {
-    console.log('data', { loading, data });
     if (!loading && data) dispatch(searchSuccess(data));
   }, [loading, data]);
+
+  // receive error
+  useEffect(() => {
+    if (error) {
+      console.error('GraphQL SearchEpisodes error', error);
+      dispatch(searchError(error));
+    }
+  }, [error]);
 
   return (
     <EpisodesStateContext.Provider value={state}>
