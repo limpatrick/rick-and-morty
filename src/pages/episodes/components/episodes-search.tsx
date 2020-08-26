@@ -2,6 +2,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { Field, Form, Formik, useFormikContext } from 'formik';
 import { TextField } from 'formik-material-ui';
+import { isEmpty } from 'ramda';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import * as Yup from 'yup';
@@ -12,7 +13,6 @@ const EpisodesSearchHandler = () => {
   const { isSubmitting, setSubmitting, setValues } = useFormikContext();
 
   useEffect(() => {
-    console.log('params changed', { name, episode });
     setValues({ name, episode });
   }, [episode, name, setValues]);
 
@@ -33,7 +33,14 @@ const EpisodesSearch = () => {
         name: Yup.string().trim(),
         episode: Yup.string().trim(),
       })}
-      onSubmit={(values) => search(values.name.trim(), values.episode.trim())}
+      onSubmit={(values, { setValues }) => {
+        const newName = values.name.trim();
+        const newEpisode = values.episode.trim();
+
+        if (!isEmpty(newName) || !isEmpty(newEpisode)) search(newName, newEpisode);
+
+        setValues({ name: newName, episode: newEpisode });
+      }}
     >
       {({ isSubmitting, resetForm }) => (
         <StyledForm>
