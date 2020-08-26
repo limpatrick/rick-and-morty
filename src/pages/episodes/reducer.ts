@@ -16,7 +16,9 @@ export default (state: State, action: Action): State => {
       return {
         ...state,
         loading: false,
-        episodes: action.payload.episodes.results.map(pick(['id', 'air_date', 'name', 'episode'])),
+        episodes: action.payload.episodes.results.map(
+          pick(['id', 'air_date', 'name', 'episode', 'characters'])
+        ),
         count: action.payload.episodes.info.pages,
       };
     case SEARCH_ERROR:

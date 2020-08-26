@@ -137,6 +137,11 @@ export const query = gql`
         name
         air_date
         episode
+        characters {
+          id
+          name
+          image
+        }
       }
     }
   }

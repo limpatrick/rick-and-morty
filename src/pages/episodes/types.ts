@@ -26,6 +26,6 @@ export type State = {
   loading: boolean;
   episodes: Pick<
     SearchEpisodesQuery['episodes']['results'][0],
-    'id' | 'air_date' | 'episode' | 'name'
+    'id' | 'air_date' | 'episode' | 'name' | 'characters'
   >[];
 };
