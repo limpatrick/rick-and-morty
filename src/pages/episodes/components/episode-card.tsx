@@ -17,7 +17,7 @@ type Props = Pick<
 const EpisodeCard = ({ id, name, episode, air_date, characters }: Props) => {
   return (
     <Card>
-      <CardActionArea component={Link} to={`episode/${id}`}>
+      <CardActionArea component={Link} to={`/episode/${id}`}>
         <StyledCardContent>
           <Typography variant="button" color="textSecondary" gutterBottom>
             {episode}

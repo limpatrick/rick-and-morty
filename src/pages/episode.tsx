@@ -3,7 +3,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-import { RouteComponentProps } from '@reach/router';
+import { Link, RouteComponentProps } from '@reach/router';
 import React from 'react';
 import styled from 'styled-components';
 import Loading from '../components/loading';
@@ -51,9 +51,11 @@ const Episode = ({ id }: Props) => {
         <Grid container spacing={6}>
           {data.episode.characters.map(({ id, name, image }) => (
             <Grid key={id} item>
-              <Tooltip title={name}>
-                <LargeAvatar alt={name} src={image} />
-              </Tooltip>
+              <Link to={`/character/${id}`}>
+                <Tooltip title={name}>
+                  <LargeAvatar alt={name} src={image} />
+                </Tooltip>
+              </Link>
             </Grid>
           ))}
         </Grid>
