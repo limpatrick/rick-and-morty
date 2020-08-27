@@ -6,8 +6,10 @@ import Typography from '@material-ui/core/Typography';
 import { Link, RouteComponentProps } from '@reach/router';
 import React from 'react';
 import styled from 'styled-components';
+import DataRow from '../components/data-row';
 import Loading from '../components/loading';
 import { useGetEpisodeQuery } from '../generated/graphql';
+import { format } from '../helpers/date';
 
 type Props = RouteComponentProps & { id?: string };
 
@@ -32,15 +34,15 @@ const Episode = ({ id }: Props) => {
   return (
     <Grid container>
       <Grid item xs={12}>
-        <Typography variant="h2" color="textSecondary">
-          {data.episode.episode}
+        <Typography variant="h4" paragraph>
+          Information
         </Typography>
-        <Typography variant="h2" display="inline">
-          {data.episode.name}
-        </Typography>
-        <Typography variant="subtitle1" color="textSecondary">
-          {data.episode.air_date}
-        </Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <DataRow label="Episode" value={data.episode.episode} />
+        <DataRow label="Name" value={data.episode.name} />
+        <DataRow label="On air" value={data.episode.air_date} />
+        <DataRow label="Created" value={format(data.episode.created, 'LLL')} />
       </Grid>
       <FeaturedCharactersTitleGrid item xs={12}>
         <Typography variant="h4" paragraph>
@@ -77,6 +79,7 @@ export const query = gql`
         name
         image
       }
+      created
     }
   }
 `;
@@ -86,7 +89,7 @@ const GridContainer = styled(Grid)`
 `;
 
 const FeaturedCharactersTitleGrid = styled(Grid)`
-  padding-top: 64px;
+  padding-top: 40px;
 `;
 
 const LargeAvatar = styled(Avatar)`

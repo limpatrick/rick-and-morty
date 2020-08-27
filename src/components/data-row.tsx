@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 type Props = { label: string; value: string };
 
-const CharacterRow = ({ label, value }: Props) => (
+const DataRow = ({ label, value }: Props) => (
   <Grid container>
     <Grid item xs={3}>
       <Typography variant="subtitle2" color="primary">
@@ -18,7 +18,7 @@ const CharacterRow = ({ label, value }: Props) => (
   </Grid>
 );
 
-export default CharacterRow;
+export default DataRow;
 
 const ValueGrid = styled(Grid)`
   @media (max-width: 600px) {

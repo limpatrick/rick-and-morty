@@ -6,10 +6,10 @@ import Typography from '@material-ui/core/Typography';
 import { Link, RouteComponentProps } from '@reach/router';
 import React from 'react';
 import styled from 'styled-components';
-import Loading from '../../components/loading';
-import { useGetCharacterQuery } from '../../generated/graphql';
-import { format } from '../../helpers/date';
-import CharacterRow from './components/character-row';
+import DataRow from '../components/data-row';
+import Loading from '../components/loading';
+import { useGetCharacterQuery } from '../generated/graphql';
+import { format } from '../helpers/date';
 
 type Props = RouteComponentProps & { id?: string };
 
@@ -39,14 +39,14 @@ const Character = ({ id }: Props) => {
         </Typography>
       </Grid>
       <Grid item xs={6}>
-        <CharacterRow label="Name" value={data.character.name} />
-        <CharacterRow label="Status" value={data.character.status} />
-        <CharacterRow label="Species" value={data.character.species} />
-        <CharacterRow label="Type" value={data.character.type} />
-        <CharacterRow label="Gender" value={data.character.gender} />
-        <CharacterRow label="Origin" value={data.character.origin.name} />
-        <CharacterRow label="Location" value={data.character.location.name} />
-        <CharacterRow label="Created" value={format(data.character.created, 'LLL')} />
+        <DataRow label="Name" value={data.character.name} />
+        <DataRow label="Status" value={data.character.status} />
+        <DataRow label="Species" value={data.character.species} />
+        <DataRow label="Type" value={data.character.type} />
+        <DataRow label="Gender" value={data.character.gender} />
+        <DataRow label="Origin" value={data.character.origin.name} />
+        <DataRow label="Location" value={data.character.location.name} />
+        <DataRow label="Created" value={format(data.character.created, 'LLL')} />
       </Grid>
       <Grid container item xs={6} justify="center">
         <LargeAvatar alt={data.character.name} src={data.character.image} />
