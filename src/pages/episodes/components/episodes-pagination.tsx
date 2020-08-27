@@ -17,7 +17,7 @@ const EpisodesPagination = () => {
       <Pagination
         page={page}
         count={count}
-        color="primary"
+        color="secondary"
         renderItem={(item) => (
           <PaginationItem
             component={Link}
