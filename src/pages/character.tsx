@@ -8,6 +8,7 @@ import React from 'react';
 import styled from 'styled-components';
 import DataRow from '../components/data-row';
 import Loading from '../components/loading';
+import { SorterProvider, SorterSelect } from '../components/sorter';
 import { useGetCharacterQuery } from '../generated/graphql';
 import { format } from '../helpers/date';
 
@@ -38,7 +39,7 @@ const Character = ({ id }: Props) => {
           Information
         </Typography>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={8} sm={6}>
         <DataRow label="Name" value={data.character.name} />
         <DataRow label="Status" value={data.character.status} />
         <DataRow label="Species" value={data.character.species} />
@@ -48,23 +49,34 @@ const Character = ({ id }: Props) => {
         <DataRow label="Location" value={data.character.location.name} />
         <DataRow label="Created" value={format(data.character.created, 'LLL')} />
       </Grid>
-      <Grid container item xs={6} justify="center">
+      <Grid container item xs={4} sm={6} justify="center">
         <LargeAvatar alt={data.character.name} src={data.character.image} />
       </Grid>
-      <EpisodeGridContainer container spacing={2}>
-        <Grid item xs={12}>
-          <Typography variant="h4" paragraph>
-            Episode list
-          </Typography>
-        </Grid>
-        {data.character.episode.map(({ id, episode }) => (
-          <Grid key={id} item>
-            <MuiLink component={Link} to={`/episode/${id}`}>
-              {episode}
-            </MuiLink>
-          </Grid>
-        ))}
-      </EpisodeGridContainer>
+      <SorterProvider data={data.character.episode} removeFields={['__typename', 'id']}>
+        {({ data: episodes }) => (
+          <>
+            <EpisodeGridContainer container spacing={2}>
+              <Grid container item alignItems="flex-end">
+                <Typography variant="h4">Episode list</Typography>
+              </Grid>
+              <Grid container item xs justify="flex-end">
+                <SorterSelect />
+              </Grid>
+            </EpisodeGridContainer>
+            <Grid item xs={12}>
+              <Grid container spacing={6}>
+                {episodes.map(({ id, episode }) => (
+                  <Grid key={id} item>
+                    <MuiLink component={Link} to={`/episode/${id}`}>
+                      {episode}
+                    </MuiLink>
+                  </Grid>
+                ))}
+              </Grid>
+            </Grid>
+          </>
+        )}
+      </SorterProvider>
     </Grid>
   );
 };
@@ -89,6 +101,7 @@ export const query = gql`
       episode {
         id
         episode
+        created
       }
       created
     }
@@ -106,4 +119,10 @@ const LargeAvatar = styled(Avatar)`
 
 const EpisodeGridContainer = styled(Grid)`
   padding-top: 40px;
+  padding-bottom: 40px;
+
+  & > * {
+    width: 310px;
+    height: 50px;
+  }
 `;

@@ -8,6 +8,7 @@ import React from 'react';
 import styled from 'styled-components';
 import DataRow from '../components/data-row';
 import Loading from '../components/loading';
+import { SorterProvider, SorterSelect } from '../components/sorter';
 import { useGetEpisodeQuery } from '../generated/graphql';
 import { format } from '../helpers/date';
 
@@ -44,24 +45,33 @@ const Episode = ({ id }: Props) => {
         <DataRow label="On air" value={data.episode.air_date} />
         <DataRow label="Created" value={format(data.episode.created, 'LLL')} />
       </Grid>
-      <FeaturedCharactersTitleGrid item xs={12}>
-        <Typography variant="h4" paragraph>
-          Featured characters
-        </Typography>
-      </FeaturedCharactersTitleGrid>
-      <Grid item xs={12}>
-        <Grid container spacing={6}>
-          {data.episode.characters.map(({ id, name, image }) => (
-            <Grid key={id} item>
-              <Link to={`/character/${id}`}>
-                <Tooltip title={name}>
-                  <LargeAvatar alt={name} src={image} />
-                </Tooltip>
-              </Link>
+      <SorterProvider data={data.episode.characters} removeFields={['__typename', 'id', 'image']}>
+        {({ data: characters }) => (
+          <>
+            <FeaturedCharactersTitleGrid container item xs={12}>
+              <Grid container item alignItems="flex-end">
+                <Typography variant="h4">Featured characters</Typography>
+              </Grid>
+              <Grid container item xs justify="flex-end">
+                <SorterSelect />
+              </Grid>
+            </FeaturedCharactersTitleGrid>
+            <Grid item xs={12}>
+              <Grid container spacing={6}>
+                {characters.map(({ id, name, image }) => (
+                  <Grid key={id} item>
+                    <Link to={`/character/${id}`}>
+                      <Tooltip title={name}>
+                        <LargeAvatar alt={name} src={image} />
+                      </Tooltip>
+                    </Link>
+                  </Grid>
+                ))}
+              </Grid>
             </Grid>
-          ))}
-        </Grid>
-      </Grid>
+          </>
+        )}
+      </SorterProvider>
     </Grid>
   );
 };
@@ -78,6 +88,7 @@ export const query = gql`
         id
         name
         image
+        created
       }
       created
     }
@@ -90,6 +101,12 @@ const GridContainer = styled(Grid)`
 
 const FeaturedCharactersTitleGrid = styled(Grid)`
   padding-top: 40px;
+  padding-bottom: 40px;
+
+  & > * {
+    width: 310px;
+    height: 50px;
+  }
 `;
 
 const LargeAvatar = styled(Avatar)`
