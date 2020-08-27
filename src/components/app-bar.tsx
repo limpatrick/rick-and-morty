@@ -9,8 +9,8 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { Link } from '@reach/router';
 import React from 'react';
 import styled from 'styled-components';
+import logo from '../assets/images/rick-and-morty-logo.png';
 import title from '../assets/images/rick-and-morty-title.png';
-import logo from '../assets/images/rick-and-morty.png';
 import { ID_TOP } from '../constants';
 
 const AppBar = () => {

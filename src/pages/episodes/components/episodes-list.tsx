@@ -1,7 +1,7 @@
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import styled from 'styled-components';
+import DisplayMessage from '../../../components/display-message';
 import Loading from '../../../components/loading';
 import { useEpisodesState } from '../provider';
 import EpisodeCard from './episode-card';
@@ -17,13 +17,7 @@ const EpisodesList = () => {
     );
   }
 
-  if (episodes.length === 0) {
-    return (
-      <GridContainer container item justify="center" alignItems="center">
-        <Typography variant="h2">No results :(</Typography>
-      </GridContainer>
-    );
-  }
+  if (episodes.length === 0) return <DisplayMessage>No results :(</DisplayMessage>;
 
   return (
     <Grid container direction="row" justify="center" alignItems="center" spacing={2}>

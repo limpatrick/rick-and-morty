@@ -1,17 +1,7 @@
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import { RouteComponentProps } from '@reach/router';
 import React from 'react';
-import styled from 'styled-components';
+import DisplayMessage from '../components/display-message';
 
-const NotFound = (props: RouteComponentProps) => (
-  <GridContainer container item justify="center" alignItems="center">
-    <Typography variant="h2">Not found :(</Typography>
-  </GridContainer>
-);
+const NotFound = (props: RouteComponentProps) => <DisplayMessage>Not found :(</DisplayMessage>;
 
 export default NotFound;
-
-const GridContainer = styled(Grid)`
-  height: calc(100vh - 88px);
-`;

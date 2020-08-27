@@ -7,6 +7,7 @@ import { Link, RouteComponentProps } from '@reach/router';
 import React from 'react';
 import styled from 'styled-components';
 import DataRow from '../components/data-row';
+import DisplayMessage from '../components/display-message';
 import Loading from '../components/loading';
 import { SorterProvider, SorterSelect } from '../components/sorter';
 import { useGetCharacterQuery } from '../generated/graphql';
@@ -24,13 +25,7 @@ const Character = ({ id }: Props) => {
       </GridContainer>
     );
   }
-  if (error || !data) {
-    return (
-      <GridContainer container item justify="center" alignItems="center">
-        <Typography variant="h2">Character not found :(</Typography>
-      </GridContainer>
-    );
-  }
+  if (error || !data) return <DisplayMessage>Character not found :(</DisplayMessage>;
 
   return (
     <Grid container alignItems="center">
